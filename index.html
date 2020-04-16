@@ -1,27 +1,24 @@
-<head>
-<script>
-function get_action(form) {
-
-var v = grecaptcha.getResponse();
-if(v.length == 0)
-{
-    document.getElementById('captcha').innerHTML="You can't leave Captcha Code empty";
-    return false;
-}
- if(v.length != 0)
- {
-    document.getElementById('captcha').innerHTML="Captcha completed";
-    return true; 
- }
-}
-</script>
-</head>
-
 <html>
   <head>
     <title>reCAPTCHA demo: Simple page</title>
      <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  </head>
+     <script>
+	function get_action(form) {
+
+	var v = grecaptcha.getResponse();
+	if(v.length == 0)
+	{
+    		document.getElementById('captcha').innerHTML="You can't leave Captcha Code empty";
+    		return false;
+	}
+ 	if(v.length != 0)
+ 	{
+    		document.getElementById('captcha').innerHTML="Captcha completed";
+    		return true; 
+ 	}
+	}
+     </script>  
+</head>
   <body>
     <form action="?" method="POST">
       <div class="g-recaptcha" id="rcaptcha" style="margin-left: 90px;" data-sitekey="6LfBIOoUAAAAANUQAJRnx-S5Uxj0C1E7epvzFbA5"></div>
