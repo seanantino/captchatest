@@ -1,30 +1,75 @@
+<?php 
+if(!empty($_REQUEST))
+{
+      //  echo '<pre>'; print_r($_REQUEST); die('END');
+        $post = [
+            'secret' => '6LeqIOoUAAAAAGudOezzPYmpIeVf-LXLShuHwnwR',
+            'response' => $_REQUEST['g-recaptcha-response'],
+        ];
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL,"https://www.google.com/recaptcha/api/siteverify");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $server_output = curl_exec($ch);
+
+        curl_close ($ch);
+        echo '<pre>'; print_r($server_output); die('ss');
+}
+?>
 <html>
   <head>
-    <title>reCAPTCHA demo: Simple page</title>
-     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-     <script>
-	function get_action(form) {
-
-	var v = grecaptcha.getResponse();
-	if(v.length == 0)
-	{
-    		document.getElementById('captcha').innerHTML="You can't leave Captcha Code empty";
-    		return false;
-	}
- 	if(v.length != 0)
- 	{
-    		document.getElementById('captcha').innerHTML="Captcha completed";
-    		return true; 
- 	}
-	}
-     </script>  
-</head>
+    <title>reCAPTCHA demo: Explicit render for multiple widgets</title>
+    <script type="text/javascript">
+      var site_key = '6LeqIOoUAAAAACnzWzCqwp-Se3WPN2ctNcbHUwAp';
+      var verifyCallback = function(response) {
+        alert(response);
+      };
+      var widgetId1;
+      var widgetId2;
+      var onloadCallback = function() {
+        // Renders the HTML element with id 'example1' as a reCAPTCHA widget.
+        // The id of the reCAPTCHA widget is assigned to 'widgetId1'.
+        widgetId1 = grecaptcha.render('example1', {
+          'sitekey' : site_key,
+          'theme' : 'light'
+        });
+        widgetId2 = grecaptcha.render(document.getElementById('example2'), {
+          'sitekey' : site_key
+        });
+        grecaptcha.render('example3', {
+          'sitekey' : site_key,
+          'callback' : verifyCallback,
+          'theme' : 'dark'
+        });
+      };
+    </script>
+  </head>
   <body>
-    <form action="?" method="POST">
-      <div class="g-recaptcha" id="rcaptcha" style="margin-left: 90px;" data-sitekey="6LfBIOoUAAAAANUQAJRnx-S5Uxj0C1E7epvzFbA5"></div>
-      <br/>
-      <input type="submit" value="Submit">
-      <span id="captcha" style="margin-left:100px;color:red" />
+    <!-- The g-recaptcha-response string displays in an alert message upon submit. -->
+    <form action="javascript:alert(grecaptcha.getResponse(widgetId1));">
+      <div id="example1"></div>
+      <br>
+      <input type="submit" value="getResponse">
     </form>
+    <br>
+    <!-- Resets reCAPTCHA widgetId2 upon submit. -->
+    <form action="javascript:grecaptcha.reset(widgetId2);">
+      <div id="example2"></div>
+      <br>
+      <input type="submit" value="reset">
+    </form>
+    <br>
+    <!-- POSTs back to the page's URL upon submit with a g-recaptcha-response POST parameter. -->
+    <form action="?" method="POST">
+      <div id="example3"></div>
+      <br>
+      <input type="submit" value="Submit">
+    </form>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+        async defer>
+    </script>
   </body>
 </html>
